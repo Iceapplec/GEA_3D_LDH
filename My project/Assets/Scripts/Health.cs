@@ -1,33 +1,32 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class Health : MonoBehaviour
 {
     public int maxHp = 3;
     public int currentHp;
-    public Slider hpSlider;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    public Slider hpSlider;      // 플레이어만 연결
+
+    public static int killCount;
     void Start()
     {
         currentHp = maxHp;
         UpdateBar();
-        
     }
 
     public void TakeDamage(int damage)
     {
-        if (currentHp <= 0) return;
+        if (currentHp <= 0) return;   // 이미 죽었으면 무시
 
         currentHp -= damage;
-        Debug.Log(name + "HP:" + currentHp);
+        Debug.Log(name + " HP: " + currentHp);
         UpdateBar();
 
         if (currentHp <= 0) Die();
     }
-    // Update is called once per frame
+
     void UpdateBar()
     {
-        Debug.Log(name + "Current HP: " + currentHp + " / Max HP : " + maxHp);
         if (hpSlider != null)
             hpSlider.value = (float)currentHp / maxHp;
     }
@@ -36,11 +35,11 @@ public class Health : MonoBehaviour
     {
         if (CompareTag("Player"))
         {
-            Debug.Log("게임 오버");
-            Time.timeScale = 0f;
+            GameManager.instance.GameOver();
         }
         else
         {
+            killCount++;
             Destroy(gameObject);
         }
     }
